@@ -1,4 +1,4 @@
-@host = https://more-posts-9.herokuapp.com/
+@host = https://more-posts-9.herokuapp.com
 
 ###
 
