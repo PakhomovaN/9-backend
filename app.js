@@ -40,15 +40,7 @@ server.post('/posts', (req, res) => {
     }
 
     posts = posts.map(o => o.id !== id ? o : {...o, content: body.content});
-    res.status(posts);
-
-    setTimeout(() => {
-        posts.push({
-            id: nextId++,
-            content
-        });
-        res.status(204).end();
-    }, 5000);
+    res.send(posts);
 });
 
 server.delete('/posts/:id', (req, res) => {
