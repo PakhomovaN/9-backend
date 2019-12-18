@@ -7,54 +7,45 @@ server.use(cors());
 
 const errorNotFound = {error: 'id.not_found'};
 
-const posts = [];
+let posts = [];
 let nextId = 1;
 
 function findPostIndexById(id) {
     return posts.findIndex(o => o.id === id);
 }
 
-server.get('/posts/seenPosts', (req, res) => {
+server.get('/posts', (req, res) => {
     res.send(posts);
 });
 
-server.get('/posts/lastPosts/:lastSeenId', (req, res) => {
+server.get('/posts/seenPosts/:lastSeenId', (req, res) => {
     const lastSeenId = Number(req.params.lastSeenId);
     const index = postId(lastSeenId);
 
-    let seenPosts;
+    let lastPosts;
 
     if (lastSeenId === 0) {
         if (posts.length <= 5) {
-            seenPosts = posts;
+            lastPosts = posts;
         } else {
-            seenPosts = posts.slice(posts.length - 5);
+            lastPosts = posts.slice(posts.length - 5);
         }          
     } else if (lastSeenId > 0 && lastSeenId <= 5) {
-        seenPosts = posts.slice(0, index);
+        lastPosts = posts.slice(0, index);
 
     } else {
-        seenPosts = posts.slice(index - 5, index);
+        lastPosts = posts.slice(index - 5, index);
     }
 
-    res.send(seenPosts);
+    res.send(lastPosts);
 });
 
-
-server.get('/posts/lastPostsLoad/:postId', (req, res) => {
-    const postId = Number(req.params.postId)
-    if (postId === posts[0].id) {
-        res.send(true);
-        return;
-    }
-    res.send(false);
-})
 
 server.post('/posts', (req, res) => { 
     const body = req.body; 
     const id = body.id; 
     if (id === 0) { 
-        posts = [...posts, {id: nextId++, content: body.content, likes: 0}]; 
+        posts = [...posts, {id: nextId++, content: body.content, type: body.type, likes: 0}]; 
         res.send(posts); 
         return; 
     } 
@@ -63,10 +54,8 @@ server.post('/posts', (req, res) => {
         res.status(404).send(errorNotFound); 
         return; 
     } 
- 
-    posts = posts.map(o => o.id !== id ? o : {...o, content: body.content}); 
-    res.send(posts); 
-}); 
+
+});
 
 server.delete('/posts/:id', (req, res) => {
     const id = Number(req.params.id);
