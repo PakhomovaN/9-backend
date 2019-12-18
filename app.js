@@ -7,7 +7,7 @@ server.use(cors());
 
 const errorNotFound = {error: 'id.not_found'};
 
-const posts = [];
+let posts = [];
 let nextId = 1;
 
 function findPostIndexById(id) {
