@@ -80,26 +80,23 @@ server.delete('/posts/:id', (req, res) => {
 
 server.post('/posts/:id/likes', (req, res) => {
     const id = Number(req.params.id);
-
     const index = findPostIndexById(id);
     if (index === -1) {
         res.status(404).send(errorNotFound);
         return;
     }
-    posts = posts.map(o => o.id !== id ? o : {...o, likes: o.likes + 1});
+    posts = posts.map(o => o.id !== id ? o : { ...o, likes: o.likes + 1 })
     res.send(posts[index]);
 });
 
 server.delete('/posts/:id/likes', (req, res) => {
     const id = Number(req.params.id);
-
     const index = findPostIndexById(id);
     if (index === -1) {
         res.status(404).send(errorNotFound);
         return;
     }
-    posts = posts.map(o => o.id !== id ? o : {...o, likes: o.likes -1});
+    posts = posts.map(o => o.id !== id ? o : { ...o, likes: o.likes - 1 })
     res.send(posts[index]);
 });
-
 server.listen(process.env.PORT || 9999);
