@@ -40,6 +40,14 @@ server.get('/posts/seenPosts/:lastSeenId', (req, res) => {
     res.send(lastPosts);
 });
 
+server.get('/posts/loadPosts/:fifthPostId', (req, res) => {
+    const fifthPostId = +req.params['fifthPostId'];
+    if (fifthPostId === posts[0].id) {
+        res.send(true);
+        return;
+    }
+    res.send(false);    
+});
 
 server.post('/posts', (req, res) => { 
     const body = req.body; 
