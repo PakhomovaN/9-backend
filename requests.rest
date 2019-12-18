@@ -31,8 +31,8 @@ DELETE {{host}}/posts/1
 
 ###
 
-POST {{host}}/posts/1/likes
+POST {{host}}/posts/2/likes
 
 ###
 
-DELETE {{host}}/posts/1/likes
+DELETE {{host}}/posts/2/likes

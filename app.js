@@ -20,7 +20,7 @@ server.get('/posts', (req, res) => {
 
 server.get('/posts/seenPosts/:lastSeenId', (req, res) => {
     const lastSeenId = Number(req.params.lastSeenId);
-    const index = postId(lastSeenId);
+    const index = findPostIndexById(lastSeenId);
 
     let lastPosts;
 
@@ -40,36 +40,41 @@ server.get('/posts/seenPosts/:lastSeenId', (req, res) => {
     res.send(lastPosts);
 });
 
-server.get('/posts/loadPosts/:fifthPostId', (req, res) => {
-    const fifthPostId = +req.params['fifthPostId'];
-    if (fifthPostId === posts[0].id) {
-        res.send(true);
-        return;
-    }
-    res.send(false);    
+server.get('/posts/:firstSeenId', (req, res) => {
+    const firstSeenId = Number(req.params.firstSeenId);
+    res.send(posts.slice(firstSeenId)); 
+    console.log(firstSeenId)   
 });
 
 server.post('/posts', (req, res) => { 
     const body = req.body; 
     const id = body.id; 
-    if (id === 0) { 
-        posts = [...posts, {id: nextId++, content: body.content, type: body.type, likes: 0}]; 
-        res.send(posts); 
-        return; 
-    } 
-    const index = findPostIndexById(id); 
-    if (index === -1) { 
-        res.status(404).send(errorNotFound); 
-        return; 
-    } 
-
+    if (id === 0) {
+        const newPost = {
+            id: nextId++,
+            content: body.content,
+            type: body.type,
+            likes: 0,
+        }
+        posts.push(newPost)
+        res.send(newPost)
+        return;
+    }
+    const index = findPostIndexById(id);
+    if (index === -1) {
+        res.status(404).send(errorNotFound);
+        return;
+    }
 });
 
 server.delete('/posts/:id', (req, res) => {
     const id = Number(req.params.id);
-
+    const index = findPostIndexById(id);
+    if (index === -1) {
+        res.status(404).send(errorNotFound);
+        return;
+    }
     posts = posts.filter(o => o.id != id);
-
     res.send(posts);
 });
 
